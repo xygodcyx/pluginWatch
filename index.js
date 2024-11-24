@@ -9,6 +9,18 @@ const __dirname = dirname(__filename);
 
 const app = express();
 const port = 80;
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*'); // 允许所有域访问
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+    // 处理预检请求
+    if (req.method === 'OPTIONS') {
+        return res.sendStatus(200);
+    }
+
+    next();
+});
 
 async function scrapeGreasyFork() {
     const url = 'https://greasyfork.org/zh-CN/users/1083212-xygodcyx';
@@ -41,7 +53,7 @@ app.get('/scripts', async (req, res) => {
         res.json(scripts);
     } catch (error) {
         console.error('Scraping error:', error);
-        res.status(500).json({error: 'An error occurred while scraping the website'});
+        res.json({error: 'An error occurred while scraping the website'});
     }
 });
 
