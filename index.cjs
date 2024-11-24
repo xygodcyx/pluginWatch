@@ -58,8 +58,14 @@
         }
     });
 
-    app.get('/', (req, res) => {
-        res.send('服务器启动成功');
+    app.get('/', async (req, res) => {
+        try {
+            const scripts = await scrapeGreasyFork();
+            res.json(scripts);
+        } catch (error) {
+            console.error('Scraping error:', error);
+            res.json({error: 'An error occurred while scraping the website'});
+        }
     });
 
     app.listen(port, () => {
