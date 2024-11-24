@@ -36,21 +36,20 @@
 
         $('#user-script-list li').each((index, element) => {
             const attr = element.attribs;
-            let url = ""
+            let url = "//greasyfork.org"
             element.children.forEach((r, i) => {
-                    if (r.name === "article") {
-                        r.children.forEach(r => {
-                            if (r.name === "h2") {
-                                r.children.forEach(r => {
-                                    if (r.name === "a") {
-                                        url = r.attribs.href
-                                    }
-                                })
-                            }
-                        })
-                    }
+                if (r.name === "article") {
+                    r.children.forEach(r => {
+                        if (r.name === "h2") {
+                            r.children.forEach(r => {
+                                if (r.name === "a") {
+                                    url = r.attribs.href
+                                }
+                            })
+                        }
+                    })
                 }
-            )
+            })
             const name = attr['data-script-name'].trim();
             const updatedDate = attr['data-script-updated-date'].trim();
             const score = attr['data-script-rating-score'].trim();
