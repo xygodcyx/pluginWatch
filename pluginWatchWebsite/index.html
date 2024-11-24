@@ -110,13 +110,17 @@
                     <th @click="sortByName">名字</th>
                     <th @click="sortByDailyInstalls">日安装量</th>
                     <th @click="sortByTotalInstalls">总安装量</th>
+                    <th @click="sortByUpdatedDate">最近更新时间</th>
+                    <th @click="sortByScore">评分</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr v-for="(script,key) in scripts" :key="key">
-                    <td>{{script.name}}</td>
+                    <td><a :href="script.url">{{script.name}}</a></td>
                     <td>{{script.dailyInstalls}}</td>
                     <td>{{script.totalInstalls}}</td>
+                    <td>{{script.updatedDate}}</td>
+                    <td>{{script.score}}</td>
                 </tr>
                 </tbody>
             </table>
@@ -144,7 +148,7 @@
         methods: {
             getScripts() {
                 return new Promise((resolve, reject) => {
-                    fetch("http://localhost/scripts", {
+                    fetch("https://scripts-server.quhou.top/", {
                         method: "get"
                     }).then(res => {
                         res.json().then(res => {
@@ -154,13 +158,19 @@
                 })
             },
             sortByName() {
-                this._sort(this.name)
+                this._sort("name")
             },
             sortByDailyInstalls() {
-                this._sort(this.dailyInstalls)
+                this._sort("dailyInstalls")
             },
             sortByTotalInstalls() {
-                this._sort(this.totalInstalls)
+                this._sort("totalInstalls")
+            },
+            sortByUpdatedDate() {
+                this._sort("updatedDate")
+            },
+            sortByScore() {
+                this._sort("score")
             },
             _sort(name) {
                 this.scripts.sort((a, b) => {

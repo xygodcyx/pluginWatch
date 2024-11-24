@@ -37,11 +37,14 @@
         $('#user-script-list li').each((index, element) => {
             const attr = element.attribs;
             const name = attr['data-script-name'].trim();
+            const url = attr['data-code-url'].trim();
+            const updatedDate = attr['data-script-updated-date'].trim();
+            const score = attr['data-script-rating-score'].trim();
             const dailyInstalls = attr['data-script-daily-installs'].trim();
             const totalInstalls = attr['data-script-total-installs'].trim();
 
             scripts.push({
-                name, dailyInstalls, totalInstalls
+                name, url, updatedDate, score, dailyInstalls, totalInstalls
             });
         });
 
