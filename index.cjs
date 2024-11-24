@@ -41,9 +41,7 @@
             const totalInstalls = attr['data-script-total-installs'].trim();
 
             scripts.push({
-                name,
-                dailyInstalls,
-                totalInstalls
+                name, dailyInstalls, totalInstalls
             });
         });
 
@@ -56,7 +54,7 @@
             res.json(scripts);
         } catch (error) {
             console.error('Scraping error:', error);
-            res.json({ error: 'An error occurred while scraping the website' });
+            res.json({error: 'An error occurred while scraping the website'});
         }
     });
 
