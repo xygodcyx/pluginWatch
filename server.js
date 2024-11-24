@@ -45,6 +45,10 @@ app.get('/scripts', async (req, res) => {
     }
 });
 
+app.get('/', async (req, res) => {
+    res.send("服务器启动成功")
+});
+
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
