@@ -2,15 +2,175 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>我的油猴脚本</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        :root {
+            --primary-color: #3f72af;
+            --background-color: #f0f5f9;
+            --text-color: #1e2022;
+            --table-bg: #ffffff;
+            --table-stripe: #f8f9fa;
+            --table-hover: #e3f2fd;
+        }
+
+        html {
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 1rem;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-bottom: 1rem;
+            box-shadow: 0 0.125rem 0.9375rem rgba(0, 0, 0, 0.1);
+            border-radius: 0.5rem;
+        }
+
+        .scripts {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background-color: var(--table-bg);
+            overflow: hidden;
+        }
+
+        .scripts thead {
+            background-color: var(--primary-color);
+            color: #ffffff;
+        }
+
+        .scripts th, .scripts td {
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .scripts tbody tr:nth-child(even) {
+            background-color: var(--table-stripe);
+        }
+
+        .scripts tbody tr:hover {
+            background-color: var(--table-hover);
+        }
+
+        @media (max-width: 768px) {
+            html {
+                font-size: 14px;
+            }
+
+            .scripts th, .scripts td {
+                padding: 0.75rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            html {
+                font-size: 12px;
+            }
+
+            .scripts th, .scripts td {
+                padding: 0.5rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
+<div class="container">
+    <h1>我的油猴脚本</h1>
+    <div id="app">
+        <div class="table-container">
+            <table class="scripts">
+                <thead>
+                <tr>
+                    <th @click="sortByName">名字</th>
+                    <th @click="sortByDailyInstalls">日安装量</th>
+                    <th @click="sortByTotalInstalls">总安装量</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(script,key) in scripts" :key="key">
+                    <td>{{script.name}}</td>
+                    <td>{{script.dailyInstalls}}</td>
+                    <td>{{script.totalInstalls}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
 <script>
-    fetch("https://greasyfork.org/zh-CN/users/1083212-xygodcyx", {
-        method: "get"
-    }).then(res => {
-        console.log(res.responseText)
-    })
+    const app = {
+        data() {
+            return {
+                scripts: [],
+                sortState: {
+                    name: false,
+                    dailyInstalls: false,
+                    totalInstalls: false,
+                }
+            }
+        },
+        async mounted() {
+            const res = await this.getScripts()
+            this.scripts = res
+            console.log(res)
+        },
+        methods: {
+            getScripts() {
+                return new Promise((resolve, reject) => {
+                    fetch("http://localhost/scripts", {
+                        method: "get"
+                    }).then(res => {
+                        res.json().then(res => {
+                            resolve(res)
+                        })
+                    })
+                })
+            },
+            sortByName() {
+                this._sort(this.name)
+            },
+            sortByDailyInstalls() {
+                this._sort(this.dailyInstalls)
+            },
+            sortByTotalInstalls() {
+                this._sort(this.totalInstalls)
+            },
+            _sort(name) {
+                this.scripts.sort((a, b) => {
+                    return (this.sortState[name] ? a : b)[name] - (this.sortState[name] ? b : a)[name] >= 0 ? 1 : -1
+                })
+                this.sortState[name] = !this.sortState[name]
+            }
+        }
+    }
+    Vue.createApp(app).mount("#app")
 </script>
 </body>
 </html>
