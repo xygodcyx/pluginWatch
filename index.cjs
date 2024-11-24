@@ -43,7 +43,7 @@
                         if (r.name === "h2") {
                             r.children.forEach(r => {
                                 if (r.name === "a") {
-                                    url = r.attribs.href
+                                    url += r.attribs.href
                                 }
                             })
                         }
